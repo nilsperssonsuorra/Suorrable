@@ -46,10 +46,6 @@ Typical workflow:
 5. Rename, duplicate, delete, or reopen generated projects from the project picker.
 6. Deploy to Vercel as preview or production.
 
-Generated landing page example:
-
-![Generated landing page preview](docs/assets/suorrable-landing-page.png)
-
 ## Architecture
 
 ![Suorrable app overview](docs/assets/suorrable-overview.svg)
