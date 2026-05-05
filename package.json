@@ -1,0 +1,39 @@
+{
+  "name": "suorrable",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Open-source Lovable-style AI app builder for generating, fixing, previewing, managing, and deploying web apps locally.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "node --check server.js && node --check src/server/index.js && node --check src/server/app.js && node --check src/server/gemini.js && node --check src/server/generatedProject.js && node --check src/server/projectStore.js && node --check src/server/buildRunner.js && node --check src/server/deployRunner.js && node --check src/server/runtimeCheck.js && node --check src/server/config.js",
+    "test": "node tests/run.js",
+    "preview": "vite preview",
+    "serve": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "ai-app-builder",
+    "lovable-alternative",
+    "lovable-clone",
+    "vibe-coding",
+    "code-generation",
+    "vercel",
+    "gemini",
+    "vite"
+  ],
+  "author": "Nils Persson Suorra",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.14.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.19.2",
+    "jsdom": "^24.1.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.3.3"
+  }
+}

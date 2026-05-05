@@ -1,0 +1,46 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Vercel deployment workflow</title>
+  <desc id="desc">Dark diagram showing Vercel deployment settings, preview and production targets, deployment logs, and final deployment URL.</desc>
+  <rect width="1920" height="1080" fill="#080808"/>
+  <rect x="96" y="92" width="1728" height="896" rx="42" fill="#0D0D0D" stroke="#262626" stroke-width="2"/>
+  <text x="160" y="180" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850">Vercel deployment</text>
+  <text x="160" y="230" fill="#9B9B9B" font-family="Inter, Arial, sans-serif" font-size="23">Deploy generated apps as preview URLs or production releases without leaving Suorrable.</text>
+
+  <rect x="160" y="310" width="520" height="600" rx="28" fill="#141414" stroke="#303030"/>
+  <text x="210" y="382" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="800">Deployment settings</text>
+  <text x="210" y="424" fill="#8E8E8E" font-family="Inter, Arial, sans-serif" font-size="18">Target and account status</text>
+  <rect x="210" y="480" width="420" height="86" rx="18" fill="#1E1E1E" stroke="#6A6A6A"/>
+  <text x="240" y="528" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800">Preview</text>
+  <text x="240" y="555" fill="#929292" font-family="Inter, Arial, sans-serif" font-size="16">Creates a shareable test URL.</text>
+  <rect x="210" y="590" width="420" height="86" rx="18" fill="#111111" stroke="#2C2C2C"/>
+  <text x="240" y="638" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800">Production</text>
+  <text x="240" y="665" fill="#929292" font-family="Inter, Arial, sans-serif" font-size="16">Runs Vercel with --prod.</text>
+  <text x="210" y="738" fill="#777" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="800">VERCEL</text>
+  <text x="210" y="785" fill="#9A9A9A" font-family="Inter, Arial, sans-serif" font-size="18">Token</text>
+  <text x="526" y="785" text-anchor="end" fill="#D1FAE5" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800">Connected</text>
+  <text x="210" y="828" fill="#9A9A9A" font-family="Inter, Arial, sans-serif" font-size="18">Name</text>
+  <text x="526" y="828" text-anchor="end" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800">from project title</text>
+
+  <g stroke="#6EE7B7" stroke-width="3" opacity=".9">
+    <path d="M725 610 H840"/>
+    <path d="M826 594 L842 610 L826 626"/>
+  </g>
+
+  <rect x="870" y="310" width="890" height="600" rx="28" fill="#101010" stroke="#303030"/>
+  <text x="920" y="382" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="800">Deployment ready</text>
+  <text x="920" y="424" fill="#8E8E8E" font-family="Inter, Arial, sans-serif" font-size="18">Preview target · linked project</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="17" font-weight="800">
+    <rect x="920" y="478" width="170" height="54" rx="16" fill="#123329" stroke="#2D7A60"/><text x="965" y="512" fill="#D1FAE5">Prepare</text>
+    <rect x="1110" y="478" width="170" height="54" rx="16" fill="#123329" stroke="#2D7A60"/><text x="1170" y="512" fill="#D1FAE5">Link</text>
+    <rect x="1300" y="478" width="170" height="54" rx="16" fill="#123329" stroke="#2D7A60"/><text x="1354" y="512" fill="#D1FAE5">Deploy</text>
+    <rect x="1490" y="478" width="170" height="54" rx="16" fill="#D8FFF0"/><text x="1548" y="512" fill="#07100D">Ready</text>
+  </g>
+  <rect x="920" y="578" width="790" height="190" rx="18" fill="#060606" stroke="#202020"/>
+  <text x="952" y="628" fill="#B8B8B8" font-family="Consolas, monospace" font-size="18">&gt; vercel link --yes --name landing-page</text>
+  <text x="952" y="670" fill="#B8B8B8" font-family="Consolas, monospace" font-size="18">&gt; vercel deploy --token ****</text>
+  <text x="952" y="712" fill="#D1FAE5" font-family="Consolas, monospace" font-size="18">Ready: https://landing-page.vercel.app</text>
+  <rect x="1284" y="806" width="190" height="54" rx="27" fill="#EAFEF3"/>
+  <text x="1336" y="840" fill="#07100D" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800">Open site</text>
+  <rect x="1492" y="806" width="218" height="54" rx="27" fill="#151515" stroke="#3A3A3A"/>
+  <text x="1542" y="840" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800">Deploy again</text>
+</svg>

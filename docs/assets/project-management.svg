@@ -1,0 +1,47 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Project management in Suorrable</title>
+  <desc id="desc">Dark diagram showing the project picker with generated project history and rename, duplicate, delete, and restore controls.</desc>
+  <rect width="1920" height="1080" fill="#080808"/>
+  <rect x="96" y="92" width="1728" height="896" rx="42" fill="#0D0D0D" stroke="#262626" stroke-width="2"/>
+  <text x="160" y="180" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850">Project management</text>
+  <text x="160" y="230" fill="#9B9B9B" font-family="Inter, Arial, sans-serif" font-size="23">Every generated app is persistent, reopenable, editable, and manageable from the project picker.</text>
+
+  <rect x="300" y="320" width="660" height="476" rx="28" fill="#151515" stroke="#303030"/>
+  <rect x="300" y="320" width="660" height="92" rx="28" fill="#1B1B1B"/>
+  <text x="350" y="378" fill="#8F8F8F" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" letter-spacing="4">PROJECTS</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="300" y="412" width="660" height="126" fill="#202020"/>
+    <text x="350" y="466" fill="#F4F4F4" font-size="24" font-weight="800">Tideform landing page</text>
+    <text x="350" y="504" fill="#7E7E7E" font-size="18">ready · 5 maj 22:41</text>
+    <text x="786" y="482" fill="#9A9A9A" font-size="24">✎</text>
+    <text x="842" y="482" fill="#9A9A9A" font-size="24">⧉</text>
+    <text x="898" y="482" fill="#9A9A9A" font-size="24">■</text>
+    <rect x="300" y="538" width="660" height="126" fill="#151515"/>
+    <text x="350" y="592" fill="#F4F4F4" font-size="24" font-weight="800">Aura journal update</text>
+    <text x="350" y="630" fill="#7E7E7E" font-size="18">ready · deployed preview</text>
+    <text x="786" y="608" fill="#9A9A9A" font-size="24">✎</text>
+    <text x="842" y="608" fill="#9A9A9A" font-size="24">⧉</text>
+    <text x="898" y="608" fill="#9A9A9A" font-size="24">■</text>
+    <rect x="300" y="664" width="660" height="132" fill="#121212"/>
+    <text x="350" y="718" fill="#F4F4F4" font-size="24" font-weight="800">Space company page</text>
+    <text x="350" y="756" fill="#7E7E7E" font-size="18">ready · duplicated fork</text>
+  </g>
+
+  <g stroke="#6EE7B7" stroke-width="3" opacity=".9">
+    <path d="M1012 558 H1130"/>
+    <path d="M1116 542 L1132 558 L1116 574"/>
+  </g>
+
+  <rect x="1160" y="326" width="460" height="464" rx="28" fill="#111616" stroke="#29413A"/>
+  <text x="1210" y="392" fill="#D8FFF0" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="850">Stored project</text>
+  <text x="1210" y="444" fill="#B8B8B8" font-family="Inter, Arial, sans-serif" font-size="20">generated/&lt;project-id&gt;</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="20">
+    <rect x="1210" y="500" width="348" height="58" rx="16" fill="#17211E"/><text x="1240" y="537" fill="#F4F4F4">.suorrable.json</text>
+    <rect x="1210" y="584" width="348" height="58" rx="16" fill="#17211E"/><text x="1240" y="621" fill="#F4F4F4">conversation.json</text>
+    <rect x="1210" y="668" width="348" height="58" rx="16" fill="#17211E"/><text x="1240" y="705" fill="#F4F4F4">dist/index.html</text>
+  </g>
+  <rect x="1210" y="742" width="130" height="48" rx="24" fill="#EAFEF3"/>
+  <text x="1248" y="773" fill="#07100D" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850">Open</text>
+  <rect x="1360" y="742" width="198" height="48" rx="24" fill="#151515" stroke="#3A3A3A"/>
+  <text x="1400" y="773" fill="#F4F4F4" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850">Duplicate</text>
+</svg>

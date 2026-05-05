@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "esnext", // Or "es2015", "es2020"
+        "outDir": "dist",
+        "strict": true,
+        "moduleResolution": "node" // Often a good addition for Vite projects
+    },
+    "include": ["src/**/*.ts"]
+}
