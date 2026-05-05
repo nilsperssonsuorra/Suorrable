@@ -4,15 +4,9 @@ Suorrable is an open-source Lovable-style AI app builder by Nils Persson Suorra.
 
 It is built as a local product prototype rather than a toy prompt wrapper: generated projects are persisted, editable, build-checked, fixable, manageable, and deployable.
 
-## Screenshots
+## Preview
 
 ![Full Suorrable UI screenshot](docs/assets/suorrable-full-ui.png)
-
-![Suorrable landing page screenshot](docs/assets/suorrable-landing-page.png)
-
-![Suorrable deployment settings screenshot](docs/assets/suorrable-deploy-settings.png)
-
-![Suorrable app overview](docs/assets/suorrable-overview.svg)
 
 ## What It Does
 
@@ -52,9 +46,13 @@ Typical workflow:
 5. Rename, duplicate, delete, or reopen generated projects from the project picker.
 6. Deploy to Vercel as preview or production.
 
-![Vercel deployment workflow](docs/assets/vercel-deploy.svg)
+Generated landing page example:
+
+![Generated landing page preview](docs/assets/suorrable-landing-page.png)
 
 ## Architecture
+
+![Suorrable app overview](docs/assets/suorrable-overview.svg)
 
 ```text
 client UI
@@ -140,6 +138,8 @@ PORT=3000
 
 Create a Vercel token, add it to `.env`, restart the backend, then click **Deploy** on any ready preview.
 
+![Suorrable deployment settings screenshot](docs/assets/suorrable-deploy-settings.png)
+
 Suorrable supports:
 
 - Preview deployments.
@@ -156,6 +156,8 @@ VERCEL_SCOPE=your-team-or-user-slug
 When a generated project is not already linked, Suorrable runs `vercel link --yes --name <project-name>` before deployment. Already-linked projects keep their existing Vercel link to avoid accidentally creating a new Vercel project on every deploy.
 
 Deployment metadata is stored in `.suorrable.json`, including deployment URL, target, status, scope, and deploy history.
+
+![Vercel deployment workflow](docs/assets/vercel-deploy.svg)
 
 ## Project Management
 
@@ -202,8 +204,8 @@ Current tests cover:
 
 ## Roadmap
 
-- Add Playwright screenshot/runtime validation for generated previews.
-- Add GitHub export for generated projects.
-- Add a final visual QA pass before showing generated results.
-- Add optional containerized builds for stronger local isolation.
-- Add README screenshots/GIFs once the UI stabilizes.
+- Add GitHub export so generated projects can be pushed to a new repository.
+- Add Playwright-based visual QA for generated previews, including screenshot comparison and basic interaction checks.
+- Add optional containerized builds for stronger isolation from the host machine.
+- Add project templates for common app types such as SaaS dashboards, landing pages, blogs, and portfolios.
+- Add provider abstraction so Gemini can be swapped for other model APIs.
