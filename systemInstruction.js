@@ -36,6 +36,7 @@ const systemInstruction = {
 
 	### **Configuration Files Rule (Crucial)**
 	If a dependency requires a root-level config file (e.g., Tailwind CSS), you MUST include it and it MUST use ES Module syntax (\`export default\`).
+	If you use Tailwind CSS, you MUST include both \`tailwind.config.js\` and \`postcss.config.js\` so Vite compiles the Tailwind directives into real CSS.
 
 	### **Important Constraints**
 	-   Provide full source contents for every file you return.

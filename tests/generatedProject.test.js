@@ -6,6 +6,7 @@ const test = require('node:test');
 const {
   collectProjectEditContext,
   enforceDependencyVersions,
+  ensureBuildableProjectConfigs,
   parseAndWriteFiles,
   removePlanningTags,
 } = require('../src/server/generatedProject');
@@ -88,4 +89,22 @@ test('enforceDependencyVersions replaces generated package scripts with safe vit
   assert.equal(packageJson.dependencies.react, '^18.3.1');
   assert.equal(packageJson.devDependencies.vite, '^5.3.1');
   assert.equal(packageJson.devDependencies['@types/react-masonry-css'], undefined);
+});
+
+test('ensureBuildableProjectConfigs creates postcss config for tailwind projects', async () => {
+  const projectPath = await makeTempProject();
+  await fs.writeFile(path.join(projectPath, 'package.json'), JSON.stringify({
+    type: 'module',
+    devDependencies: {
+      autoprefixer: '^10.4.16',
+      postcss: '^8.4.31',
+      tailwindcss: '^3.3.3',
+    },
+  }));
+
+  await ensureBuildableProjectConfigs(projectPath);
+
+  const postcssConfig = await fs.readFile(path.join(projectPath, 'postcss.config.js'), 'utf8');
+  assert.match(postcssConfig, /tailwindcss/);
+  assert.match(postcssConfig, /autoprefixer/);
 });

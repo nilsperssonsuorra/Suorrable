@@ -132,6 +132,13 @@ async function enforceDependencyVersions(projectPath) {
 async function ensureBuildableProjectConfigs(projectPath) {
   console.log('[CONFIG] Enforcing standard build configurations...');
 
+  let packageJson = {};
+  try {
+    packageJson = JSON.parse(await fs.readFile(path.join(projectPath, 'package.json'), 'utf8'));
+  } catch {
+    packageJson = {};
+  }
+
   const viteConfigContent = [
     "import { defineConfig } from 'vite';",
     "import react from '@vitejs/plugin-react';",
@@ -140,6 +147,24 @@ async function ensureBuildableProjectConfigs(projectPath) {
   ].join('\n');
 
   await fs.writeFile(path.join(projectPath, 'vite.config.ts'), viteConfigContent);
+
+  const allDependencies = {
+    ...(packageJson.dependencies || {}),
+    ...(packageJson.devDependencies || {}),
+  };
+  if (allDependencies.tailwindcss) {
+    const postcssConfigContent = [
+      'export default {',
+      '  plugins: {',
+      '    tailwindcss: {},',
+      '    autoprefixer: {},',
+      '  },',
+      '};',
+      '',
+    ].join('\n');
+
+    await fs.writeFile(path.join(projectPath, 'postcss.config.js'), postcssConfigContent);
+  }
 
   const tsConfigPath = path.join(projectPath, 'tsconfig.json');
   try {
