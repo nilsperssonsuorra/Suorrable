@@ -59,6 +59,12 @@ async function readLinkedVercelProject(projectPath) {
   }
 }
 
+function createVercelLinkArgs(existingLink, projectName, commonArgs = []) {
+  return existingLink
+    ? ['link', '--yes', ...commonArgs]
+    : ['link', '--yes', '--project', projectName, ...commonArgs];
+}
+
 function runVercelCommand(projectPath, args, options = {}) {
   const { onLog } = options;
 
@@ -132,9 +138,7 @@ function deployProjectToVercel(projectPath, options = {}) {
 
   return readLinkedVercelProject(projectPath)
     .then(existingLink => {
-      const linkArgs = existingLink
-        ? ['link', '--yes', ...commonArgs]
-        : ['link', '--yes', '--name', vercelProjectName, ...commonArgs];
+      const linkArgs = createVercelLinkArgs(existingLink, vercelProjectName, commonArgs);
 
       return runVercelCommand(projectPath, linkArgs, { onLog })
         .then(linkResult => ({ linkResult, linkedBeforeDeploy: Boolean(existingLink) }));
@@ -169,6 +173,7 @@ function deployProjectToVercel(projectPath, options = {}) {
 }
 
 module.exports = {
+  createVercelLinkArgs,
   createVercelProjectName,
   deployProjectToVercel,
   extractDeploymentUrl,

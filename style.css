@@ -738,10 +738,10 @@ gap: 0.45rem;
 }
 
 .preview-control-btn {
-    background: rgba(10, 10, 10, 0.6);
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f5f5f5;
     height: 40px;
     box-sizing: border-box;
     border-radius: 20px;
@@ -754,7 +754,7 @@ gap: 0.45rem;
     align-items: center;
     transition: all 0.2s ease;
     padding: 0 1rem;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
 }
 
 .preview-control-btn:not(.deploy-btn):not(.deploy-settings-btn):has(i) {
@@ -774,17 +774,9 @@ cursor: not-allowed;
 }
 
 .preview-control-btn:disabled:hover {
-background: rgba(10, 10, 10, 0.6);
-color: var(--text-secondary);
-border-color: var(--border-color);
-}
-
-.preview-container.light-preview .preview-control-btn {
+background: rgba(10, 10, 10, 0.72);
 color: #f5f5f5;
-}
-
-.preview-container.light-preview .preview-control-btn:hover {
-color: var(--background-color);
+border-color: rgba(255, 255, 255, 0.18);
 }
 
 .deploy-btn {

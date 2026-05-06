@@ -50,9 +50,21 @@ const smartScrollToBottom = () => {
     smartScrollElementToBottom(responseContainer);
 };
 
-const updatePreviewControlContrast = (previewPath: string) => updatePreviewContrast(previewContainer, previewPath);
+const updatePreviewControlContrast = () => updatePreviewContrast(previewContainer);
 
 enforcePreviewSandbox(livePreviewIframe);
+livePreviewIframe.tabIndex = 0;
+
+const focusPreviewIframe = () => {
+  livePreviewIframe.focus();
+  try {
+    livePreviewIframe.contentWindow?.focus();
+  } catch {
+    // Sandboxed previews may have an opaque origin; focusing the iframe element still helps keyboard input.
+  }
+};
+
+livePreviewIframe.addEventListener('pointerdown', focusPreviewIframe);
 
 const setReloadPreviewEnabled = () => {
   reloadPreviewBtn.disabled = !currentPreviewPath || isGenerating;
@@ -79,7 +91,7 @@ const loadPreview = (previewPath: string) => {
   setReloadPreviewEnabled();
   livePreviewIframe.removeAttribute('srcdoc');
   livePreviewIframe.src = `${window.location.origin}${previewPath}?v=${Date.now()}`;
-  updatePreviewControlContrast(previewPath);
+  updatePreviewControlContrast();
 };
 
 const reloadCurrentPreview = () => {

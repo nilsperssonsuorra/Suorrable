@@ -100,7 +100,7 @@ async function enforceDependencyVersions(projectPath) {
     packageJson.devDependencies = packageJson.devDependencies || {};
     packageJson.scripts = {
       dev: 'vite --host 127.0.0.1',
-      build: 'vite build',
+      build: 'tsc --noEmit && vite build',
       preview: 'vite preview --host 127.0.0.1',
     };
 
@@ -121,6 +121,8 @@ async function enforceDependencyVersions(projectPath) {
     packageJson.devDependencies.vite = packageJson.devDependencies.vite || stableDevDependencies.vite;
     packageJson.devDependencies['@vitejs/plugin-react'] =
       packageJson.devDependencies['@vitejs/plugin-react'] || stableDevDependencies['@vitejs/plugin-react'];
+    packageJson.devDependencies.typescript =
+      packageJson.devDependencies.typescript || stableDevDependencies.typescript;
 
     await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log('[CONFIG] Successfully updated package.json.');

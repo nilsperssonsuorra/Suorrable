@@ -25,7 +25,7 @@ const systemInstruction = {
 
 	### **Required Files For New Projects**
 	-   \`package.json\`: Must adhere to the following:
-		-   Include a \`"build": "vite build"\` script.
+		-   Include a \`"build": "tsc --noEmit && vite build"\` script.
 		-   Include a \`"type": "module"\` field.
 		-   **Include all direct and peer dependencies.**
 		-   Do not add third-party \`@types/*\` packages except \`@types/react\` and \`@types/react-dom\`; many UI libraries either bundle their own types or do not need type packages for Vite builds.
@@ -37,6 +37,13 @@ const systemInstruction = {
 	### **Configuration Files Rule (Crucial)**
 	If a dependency requires a root-level config file (e.g., Tailwind CSS), you MUST include it and it MUST use ES Module syntax (\`export default\`).
 	If you use Tailwind CSS, you MUST include both \`tailwind.config.js\` and \`postcss.config.js\` so Vite compiles the Tailwind directives into real CSS.
+
+	### **Interactive App Input Rule**
+	For games, canvas apps, 3D scenes, drawing tools, editors, or any app using keyboard shortcuts, implement reliable keyboard focus:
+	-   Render the main interactive surface inside a focusable element with \`tabIndex={0}\`.
+	-   Focus that element on pointer/click before reading keyboard controls.
+	-   Attach key handlers to that focused element or to \`document\` from inside the app, not only to an unfocused wrapper.
+	-   Prevent default browser behavior for game controls such as arrows, space, and WASD when appropriate.
 
 	### **Important Constraints**
 	-   Provide full source contents for every file you return.

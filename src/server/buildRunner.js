@@ -51,6 +51,11 @@ function runNpmCommand(args, projectPath, timeout, onDataChunk) {
   });
 }
 
+function isPeerDependencyResolutionError(error) {
+  const message = String(error && error.message ? error.message : error);
+  return /\bERESOLVE\b/i.test(message) && /peer/i.test(message);
+}
+
 async function installAndBuildProject(projectPath, sendEvent) {
   sendEvent({ status: 'installing', message: 'Installing dependencies...' });
 
@@ -60,8 +65,27 @@ async function installAndBuildProject(projectPath, sendEvent) {
       if (message) sendEvent({ event: 'build-log', stage: 'install', message });
     });
   } catch (error) {
-    console.error(`[INSTALL STDERR] ${error.message}`);
-    throw new Error(`NPM install failed: ${error.message}`);
+    if (isPeerDependencyResolutionError(error)) {
+      console.warn('[INSTALL STDERR] Peer dependency resolution failed. Retrying with --legacy-peer-deps.');
+      sendEvent({
+        event: 'build-log',
+        stage: 'install',
+        message: 'Peer dependency conflict detected. Retrying install with npm legacy peer resolution...',
+      });
+
+      try {
+        await runNpmCommand(['install', '--legacy-peer-deps'], projectPath, INSTALL_TIMEOUT_MS, data => {
+          const message = formatProcessLog(data);
+          if (message) sendEvent({ event: 'build-log', stage: 'install', message });
+        });
+      } catch (retryError) {
+        console.error(`[INSTALL STDERR] ${retryError.message}`);
+        throw new Error(`NPM install failed: ${retryError.message}`);
+      }
+    } else {
+      console.error(`[INSTALL STDERR] ${error.message}`);
+      throw new Error(`NPM install failed: ${error.message}`);
+    }
   }
 
   sendEvent({ status: 'building', message: 'Build starting...' });
@@ -83,4 +107,5 @@ async function installAndBuildProject(projectPath, sendEvent) {
 
 module.exports = {
   installAndBuildProject,
+  isPeerDependencyResolutionError,
 };

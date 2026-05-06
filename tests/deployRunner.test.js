@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { createVercelProjectName, extractDeploymentUrl } = require('../src/server/deployRunner');
+const { createVercelLinkArgs, createVercelProjectName, extractDeploymentUrl } = require('../src/server/deployRunner');
 
 test('extractDeploymentUrl returns the latest vercel app URL', () => {
   const output = [
@@ -36,5 +36,19 @@ test('createVercelProjectName falls back to a stable suorrable name', () => {
   assert.equal(
     createVercelProjectName({ projectId: 'abcdef12-3456-4567-8123-abcdefabcdef' }),
     'suorrable-abcdef12'
+  );
+});
+
+test('createVercelLinkArgs uses supported project flag for new links', () => {
+  assert.deepEqual(
+    createVercelLinkArgs(null, 'demo-project', ['--token', 'secret']),
+    ['link', '--yes', '--project', 'demo-project', '--token', 'secret']
+  );
+});
+
+test('createVercelLinkArgs keeps existing links without forcing a project', () => {
+  assert.deepEqual(
+    createVercelLinkArgs({ projectId: 'prj_123' }, 'demo-project', ['--token', 'secret']),
+    ['link', '--yes', '--token', 'secret']
   );
 });

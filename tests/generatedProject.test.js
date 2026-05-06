@@ -83,11 +83,12 @@ test('enforceDependencyVersions replaces generated package scripts with safe vit
   const packageJson = JSON.parse(await fs.readFile(path.join(projectPath, 'package.json'), 'utf8'));
   assert.deepEqual(packageJson.scripts, {
     dev: 'vite --host 127.0.0.1',
-    build: 'vite build',
+    build: 'tsc --noEmit && vite build',
     preview: 'vite preview --host 127.0.0.1',
   });
   assert.equal(packageJson.dependencies.react, '^18.3.1');
   assert.equal(packageJson.devDependencies.vite, '^5.3.1');
+  assert.equal(packageJson.devDependencies.typescript, '^5.5.3');
   assert.equal(packageJson.devDependencies['@types/react-masonry-css'], undefined);
 });
 

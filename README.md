@@ -152,7 +152,7 @@ VERCEL_TOKEN=your_vercel_token_here
 VERCEL_SCOPE=your-team-or-user-slug
 ```
 
-When a generated project is not already linked, Suorrable runs `vercel link --yes --name <project-name>` before deployment. Already-linked projects keep their existing Vercel link to avoid accidentally creating a new Vercel project on every deploy.
+When a generated project is not already linked, Suorrable runs `vercel link --yes --project <project-name>` before deployment. Already-linked projects keep their existing Vercel link to avoid accidentally creating a new Vercel project on every deploy.
 
 Deployment metadata is stored in `.suorrable.json`, including deployment URL, target, status, scope, and deploy history.
 

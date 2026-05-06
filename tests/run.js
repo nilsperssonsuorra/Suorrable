@@ -1,3 +1,4 @@
+require('./buildRunner.test');
 require('./cors.test');
 require('./deployRunner.test');
 require('./generatedProject.test');
