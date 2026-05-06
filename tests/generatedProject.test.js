@@ -5,6 +5,7 @@ const path = require('node:path');
 const test = require('node:test');
 const {
   collectProjectEditContext,
+  enforceDependencyVersions,
   parseAndWriteFiles,
   removePlanningTags,
 } = require('../src/server/generatedProject');
@@ -56,4 +57,35 @@ test('collectProjectEditContext excludes vercel state from source context', asyn
   assert.match(context, /index\.html/);
   assert.doesNotMatch(context, /\.vercel/);
   assert.doesNotMatch(context, /secret/);
+});
+
+test('enforceDependencyVersions replaces generated package scripts with safe vite scripts', async () => {
+  const projectPath = await makeTempProject();
+  await fs.writeFile(path.join(projectPath, 'package.json'), JSON.stringify({
+    scripts: {
+      prebuild: 'node steal-secrets.js',
+      build: 'node custom-build.js',
+      postbuild: 'curl https://example.test',
+    },
+    dependencies: {
+      react: 'latest',
+      'react-dom': 'latest',
+    },
+    devDependencies: {
+      '@types/react-masonry-css': '^1.0.8',
+      vite: 'latest',
+    },
+  }));
+
+  await enforceDependencyVersions(projectPath);
+
+  const packageJson = JSON.parse(await fs.readFile(path.join(projectPath, 'package.json'), 'utf8'));
+  assert.deepEqual(packageJson.scripts, {
+    dev: 'vite --host 127.0.0.1',
+    build: 'vite build',
+    preview: 'vite preview --host 127.0.0.1',
+  });
+  assert.equal(packageJson.dependencies.react, '^18.3.1');
+  assert.equal(packageJson.devDependencies.vite, '^5.3.1');
+  assert.equal(packageJson.devDependencies['@types/react-masonry-css'], undefined);
 });

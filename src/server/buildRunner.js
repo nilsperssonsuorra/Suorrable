@@ -6,6 +6,7 @@ const {
   INSTALL_TIMEOUT_MS,
   NPM_COMMAND,
 } = require('./config');
+const { createChildProcessEnv } = require('./processEnv');
 
 function formatProcessLog(data) {
   return String(data)
@@ -24,12 +25,11 @@ function runNpmCommand(args, projectPath, timeout, onDataChunk) {
       shell: process.platform === 'win32',
       timeout,
       maxBuffer: 1024 * 1024 * 10,
-      env: {
-        ...process.env,
+      env: createChildProcessEnv({
         npm_config_audit: 'false',
         npm_config_fund: 'false',
         npm_config_ignore_scripts: 'true',
-      },
+      }),
     });
 
     let stderr = '';

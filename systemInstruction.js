@@ -28,6 +28,7 @@ const systemInstruction = {
 		-   Include a \`"build": "vite build"\` script.
 		-   Include a \`"type": "module"\` field.
 		-   **Include all direct and peer dependencies.**
+		-   Do not add third-party \`@types/*\` packages except \`@types/react\` and \`@types/react-dom\`; many UI libraries either bundle their own types or do not need type packages for Vite builds.
 	-   \`index.html\`: The root HTML file.
 	-   A TypeScript entry point (e.g., \`src/main.tsx\`).
 	-   All React component files (e.g., \`src/App.tsx\`).

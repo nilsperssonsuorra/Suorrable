@@ -28,6 +28,7 @@ const responseContainer = document.getElementById("response-container") as HTMLD
 const livePreviewIframe = document.getElementById("live-preview-iframe") as HTMLIFrameElement;
 const previewContainer = document.getElementById("preview-container") as HTMLDivElement;
 const loaderText = document.querySelector(".loader-text") as HTMLParagraphElement;
+const reloadPreviewBtn = document.getElementById("reload-preview-btn") as HTMLButtonElement;
 const fullscreenBtn = document.getElementById("fullscreen-btn") as HTMLButtonElement;
 const exitFullscreenBtn = document.getElementById("exit-fullscreen-btn") as HTMLButtonElement;
 const codeViewer = document.getElementById("code-viewer") as HTMLDivElement;
@@ -37,6 +38,7 @@ const fixingErrorContainer = document.getElementById("fixing-error-container")!;
 let chatHistory: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
 let isGenerating = false;
 let currentProjectId: string | null = null;
+let currentPreviewPath: string | null = null;
 let finalGeneratedCode: string | null = null;
 const currentProjectStorageKey = 'suorrable.currentProjectId';
 
@@ -52,6 +54,39 @@ const updatePreviewControlContrast = (previewPath: string) => updatePreviewContr
 
 enforcePreviewSandbox(livePreviewIframe);
 
+const setReloadPreviewEnabled = () => {
+  reloadPreviewBtn.disabled = !currentPreviewPath || isGenerating;
+};
+
+const setPreviewPlaceholder = () => {
+  livePreviewIframe.removeAttribute('src');
+  livePreviewIframe.srcdoc = [
+    '<!doctype html>',
+    '<html>',
+    '<head>',
+    '<style>html,body{margin:0;width:100%;height:100%;background:#111111;}</style>',
+    '</head>',
+    '<body></body>',
+    '</html>',
+  ].join('');
+};
+
+setPreviewPlaceholder();
+setReloadPreviewEnabled();
+
+const loadPreview = (previewPath: string) => {
+  currentPreviewPath = previewPath;
+  setReloadPreviewEnabled();
+  livePreviewIframe.removeAttribute('srcdoc');
+  livePreviewIframe.src = `${window.location.origin}${previewPath}?v=${Date.now()}`;
+  updatePreviewControlContrast(previewPath);
+};
+
+const reloadCurrentPreview = () => {
+  if (!currentPreviewPath || isGenerating) return;
+  loadPreview(currentPreviewPath);
+};
+
 const resetToInitialView = () => {
   if (chatHistory.length > 0 || currentProjectId) {
     if (!confirm("Start a new session? Current chat and preview will be lost.")) return;
@@ -60,8 +95,10 @@ const resetToInitialView = () => {
   chatHistory = [];
   isGenerating = false;
   currentProjectId = null;
+  currentPreviewPath = null;
   finalGeneratedCode = null;
   deployController.reset();
+  setReloadPreviewEnabled();
   localStorage.removeItem(currentProjectStorageKey);
   loaderText.textContent = "Building your preview...";
   chatInput.placeholder = "Describe what you want to create...";
@@ -69,10 +106,11 @@ const resetToInitialView = () => {
   sendButton.disabled = false;
   setTimeout(() => {
     responseContainer.innerHTML = "";
-    livePreviewIframe.src = "about:blank";
-    livePreviewIframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
+    setPreviewPlaceholder();
+    livePreviewIframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals');
     codeViewer.innerHTML = "";
     previewContainer.classList.remove('is-loading', 'is-updating', 'fullscreen-preview', 'showing-code', 'is-fixing', 'light-preview');
+    setReloadPreviewEnabled();
     fullscreenBtn.style.display = 'flex';
     exitFullscreenBtn.style.display = 'none';
     deployController.update();
@@ -157,13 +195,15 @@ const deleteProject = async (project: ProjectMetadata) => {
     chatHistory = [];
     isGenerating = false;
     currentProjectId = null;
+    currentPreviewPath = null;
     finalGeneratedCode = null;
     deployController.reset();
     localStorage.removeItem(currentProjectStorageKey);
     responseContainer.innerHTML = '';
-    livePreviewIframe.src = 'about:blank';
+    setPreviewPlaceholder();
     codeViewer.innerHTML = '';
     previewContainer.classList.remove('is-loading', 'is-updating', 'fullscreen-preview', 'showing-code', 'is-fixing', 'light-preview');
+    setReloadPreviewEnabled();
   }
 
   await loadProjectList();
@@ -239,9 +279,11 @@ const restoreProject = async (projectId: string) => {
     }
 
     if (metadata.previewPath) {
-      livePreviewIframe.src = `${window.location.origin}${metadata.previewPath}?v=${Date.now()}`;
+      loadPreview(metadata.previewPath);
       previewContainer.classList.remove('is-loading', 'is-updating', 'is-fixing');
-      updatePreviewControlContrast(metadata.previewPath);
+    } else {
+      currentPreviewPath = null;
+      setReloadPreviewEnabled();
     }
     deployController.update();
   } catch (error) {
@@ -256,6 +298,7 @@ const sendMessage = async () => {
 
   isGenerating = true;
   sendButton.disabled = true;
+  setReloadPreviewEnabled();
   previewContainer.classList.remove('showing-code');
 
   if (!app.classList.contains("split-view-active")) {
@@ -444,6 +487,7 @@ const sendMessage = async () => {
             aiMessageBody.innerHTML = renderMarkdown(question);
             chatHistory.push({ role: 'user', parts: [{ text: message }] });
             chatHistory.push({ role: 'model', parts: [{ text: parsedData.fullResponse || `<question>${question}</question>` }] });
+            setPreviewPlaceholder();
             previewContainer.classList.remove('is-loading', 'is-updating', 'is-fixing');
             loaderText.textContent = "Building your preview...";
             isGenerating = false;
@@ -462,6 +506,7 @@ const sendMessage = async () => {
           
           } else if (parsedData.event === 'done') {
             currentProjectId = parsedData.projectId;
+            currentPreviewPath = null;
             deployController.clearDeployment();
             localStorage.setItem(currentProjectStorageKey, currentProjectId);
             if (finalResponseForHistory) {
@@ -470,7 +515,6 @@ const sendMessage = async () => {
             }
             const previewPath = parsedData.previewPath;
             const previewUrl = `${window.location.origin}${previewPath}?v=${Date.now()}`;
-            updatePreviewControlContrast(previewPath);
 
             console.log(`[CLIENT DEBUG] Build complete. Received preview path: ${previewPath}`);
             console.log(`[CLIENT DEBUG] Performing pre-flight check on URL: ${previewUrl}`);
@@ -494,7 +538,7 @@ const sendMessage = async () => {
                 alert("An unexpected error occurred while rendering the preview iframe. Check the console.");
               };
 
-              livePreviewIframe.src = previewUrl;
+              loadPreview(previewPath);
 
             } catch (error) {
               console.error("CRITICAL: Preview pre-flight check failed.", error);
@@ -506,6 +550,7 @@ const sendMessage = async () => {
 
             isGenerating = false;
             sendButton.disabled = false;
+            setReloadPreviewEnabled();
             deployController.update();
             chatInput.focus();
 
@@ -534,10 +579,12 @@ const sendMessage = async () => {
     previewContainer.classList.remove('is-loading', 'is-updating', 'is-fixing');
     isGenerating = false;
     sendButton.disabled = false;
+    setReloadPreviewEnabled();
     chatInput.focus();
   }
 };
 
+reloadPreviewBtn.addEventListener('click', reloadCurrentPreview);
 sendButton.addEventListener("click", sendMessage);
 chatInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {

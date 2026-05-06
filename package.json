@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "check": "node --check server.js && node --check src/server/index.js && node --check src/server/app.js && node --check src/server/gemini.js && node --check src/server/generatedProject.js && node --check src/server/projectStore.js && node --check src/server/buildRunner.js && node --check src/server/deployRunner.js && node --check src/server/runtimeCheck.js && node --check src/server/config.js",
+    "check": "node --check server.js && node --check src/server/index.js && node --check src/server/app.js && node --check src/server/gemini.js && node --check src/server/generatedProject.js && node --check src/server/projectStore.js && node --check src/server/buildRunner.js && node --check src/server/deployRunner.js && node --check src/server/runtimeCheck.js && node --check src/server/config.js && node --check src/server/processEnv.js",
     "test": "node tests/run.js",
     "preview": "vite preview",
     "serve": "node server.js",
@@ -16,7 +16,6 @@
   "keywords": [
     "ai-app-builder",
     "lovable-alternative",
-    "lovable-clone",
     "vibe-coding",
     "code-generation",
     "vercel",

@@ -355,7 +355,7 @@ animation-fill-mode: backwards;
 width: 100%;
 height: 100%;
 border: none;
-background-color: #FFFFFF;
+background-color: var(--foreground-color);
 grid-row: 1 / -1;
 grid-column: 1 / -1;
 opacity: 0;
@@ -722,6 +722,12 @@ transition: opacity 0.3s ease;
 .preview-container.fullscreen-preview .preview-controls,
 #app.split-view-active .preview-controls {
 opacity: 1;
+}
+
+.preview-container.is-loading .preview-controls,
+.preview-container.is-fixing .preview-controls {
+opacity: 0;
+pointer-events: none;
 }
 
 .deploy-settings-btn {

@@ -86,12 +86,15 @@ Suorrable is designed to reduce obvious local-generation risks:
 
 - Generated file paths are validated so writes cannot escape the project folder.
 - Generated previews run in an iframe without `allow-same-origin`.
+- Local preview assets are served only from each generated project's `dist` folder.
+- Local preview responses can only be framed by Suorrable, and preview API access is still restricted by CORS.
+- Generated install/build processes receive a minimal environment without API keys or deploy tokens.
 - Preview runtime checks block non-local resource loading during JSDOM verification.
 - Vercel tokens are read from `.env` and never shown in the UI.
 - Deploy logs are token-redacted before being streamed to the browser.
 - `.vercel`, `node_modules`, build output, and debug artifacts are excluded from AI edit context.
 
-This is still a local developer tool, not a hardened multi-tenant sandbox.
+This is still a local developer tool, not a hardened sandbox; do not run it as a public hosted service.
 
 ## Setup
 

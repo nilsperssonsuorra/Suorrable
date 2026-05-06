@@ -7,6 +7,7 @@ const {
   VERCEL_SCOPE,
   VERCEL_TOKEN,
 } = require('./config');
+const { createChildProcessEnv } = require('./processEnv');
 
 function stripAnsi(value) {
   return String(value || '').replace(/\u001b\[[0-9;]*m/g, '');
@@ -67,10 +68,7 @@ function runVercelCommand(projectPath, args, options = {}) {
       shell: process.platform === 'win32',
       timeout: DEPLOY_TIMEOUT_MS,
       maxBuffer: 1024 * 1024 * 10,
-      env: {
-        ...process.env,
-        VERCEL_TOKEN,
-      },
+      env: createChildProcessEnv(),
     });
 
     let stdout = '';

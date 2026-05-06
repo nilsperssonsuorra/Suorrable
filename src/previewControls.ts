@@ -49,7 +49,7 @@ function scorePreviewBrightness(source: string): number {
 }
 
 export function enforcePreviewSandbox(iframe: HTMLIFrameElement) {
-  const desired = 'allow-scripts allow-forms allow-modals allow-popups';
+  const desired = 'allow-scripts allow-forms allow-modals';
   const existing = iframe.getAttribute('sandbox') || '';
   if (existing.indexOf('allow-same-origin') > -1 || existing !== desired) {
     console.warn('Incorrect sandbox attribute detected. Forcing secure sandbox.');

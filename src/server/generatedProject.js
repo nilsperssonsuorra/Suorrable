@@ -3,6 +3,12 @@ const path = require('path');
 const { REQUIRED_GENERATED_FILES } = require('./config');
 const { resolveInside } = require('./projectStore');
 
+const ALLOWED_GENERATED_TYPE_PACKAGES = new Set([
+  '@types/node',
+  '@types/react',
+  '@types/react-dom',
+]);
+
 function cleanFileContent(content) {
   if (typeof content !== 'string') return '';
 
@@ -92,6 +98,17 @@ async function enforceDependencyVersions(projectPath) {
 
     packageJson.dependencies = packageJson.dependencies || {};
     packageJson.devDependencies = packageJson.devDependencies || {};
+    packageJson.scripts = {
+      dev: 'vite --host 127.0.0.1',
+      build: 'vite build',
+      preview: 'vite preview --host 127.0.0.1',
+    };
+
+    for (const packageName of Object.keys(packageJson.devDependencies)) {
+      if (packageName.startsWith('@types/') && !ALLOWED_GENERATED_TYPE_PACKAGES.has(packageName)) {
+        delete packageJson.devDependencies[packageName];
+      }
+    }
 
     for (const [pkg, version] of Object.entries(stableDependencies)) {
       if (packageJson.dependencies[pkg]) packageJson.dependencies[pkg] = version;

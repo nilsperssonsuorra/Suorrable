@@ -4,7 +4,7 @@ const cors = require('cors');
 const fs = require('fs').promises;
 const { v4: uuidv4 } = require('uuid');
 const {
-  GENERATED_PROJECTS_DIR,
+  HOST,
   MAX_FIX_ATTEMPTS,
   ROOT_DIR,
   VERCEL_SCOPE,
@@ -34,6 +34,66 @@ const {
 } = require('./projectStore');
 const { checkRuntimeErrorsWithJSDOM } = require('./runtimeCheck');
 
+function isPrivateIpv4(hostname) {
+  const parts = String(hostname || '').split('.').map(part => Number(part));
+  if (parts.length !== 4 || parts.some(part => !Number.isInteger(part) || part < 0 || part > 255)) {
+    return false;
+  }
+
+  const [first, second] = parts;
+  return (
+    first === 10 ||
+    (first === 172 && second >= 16 && second <= 31) ||
+    (first === 192 && second === 168)
+  );
+}
+
+function isUnspecifiedHost(hostname) {
+  return hostname === '0.0.0.0' || hostname === '::' || hostname === '[::]';
+}
+
+function isAllowedCorsOrigin(origin, host = HOST) {
+  if (!origin) return true;
+
+  let url;
+  try {
+    url = new URL(origin);
+  } catch {
+    return false;
+  }
+
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+
+  const originHost = url.hostname.replace(/^\[|\]$/g, '');
+  const configuredHost = String(host || '').replace(/^\[|\]$/g, '');
+
+  if (originHost === 'localhost' || originHost === '127.0.0.1' || originHost === '::1') return true;
+  if (configuredHost && !isUnspecifiedHost(configuredHost) && originHost === configuredHost) return true;
+  if (isUnspecifiedHost(configuredHost) && isPrivateIpv4(originHost)) return true;
+
+  return false;
+}
+
+function handleCorsOrigin(origin, callback) {
+  callback(null, isAllowedCorsOrigin(origin) ? true : false);
+}
+
+function setGeneratedPreviewHeaders(res) {
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+}
+
+function handleGeneratedPreviewPreflight(req, res) {
+  setGeneratedPreviewHeaders(res);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    req.headers['access-control-request-headers'] || 'Content-Type'
+  );
+  res.status(204).end();
+}
+
 function createApp() {
   const app = express();
 
@@ -44,15 +104,31 @@ function createApp() {
 
   app.use(express.json({ limit: '50mb' }));
   app.use(express.static(path.join(ROOT_DIR, 'dist')));
-  app.use(cors());
+  app.use(cors({
+    origin: handleCorsOrigin,
+  }));
 
-  app.use('/generated', (req, res, next) => {
-    res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    next();
+  app.use('/generated/:projectId/dist', (req, res, next) => {
+    setGeneratedPreviewHeaders(res);
+
+    if (req.method === 'OPTIONS') {
+      handleGeneratedPreviewPreflight(req, res);
+      return;
+    }
+
+    let distPath;
+    try {
+      distPath = path.join(getGeneratedProjectPath(req.params.projectId), 'dist');
+    } catch {
+      res.status(400).send('Invalid project id.');
+      return;
+    }
+
+    express.static(distPath, {
+      dotfiles: 'deny',
+      fallthrough: false,
+    })(req, res, next);
   });
-
-  app.use('/generated', express.static(GENERATED_PROJECTS_DIR));
 
   const buildPromptForMode = async (prompt, projectPath, isNewProject, metadata = {}) => {
     if (isNewProject) return prompt;
@@ -413,5 +489,9 @@ function createApp() {
 }
 
 module.exports = {
+  handleCorsOrigin,
+  handleGeneratedPreviewPreflight,
   createApp,
+  isAllowedCorsOrigin,
+  setGeneratedPreviewHeaders,
 };

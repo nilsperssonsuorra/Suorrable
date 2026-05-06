@@ -1,4 +1,4 @@
-const { PORT, assertRequiredEnv } = require('./config');
+const { HOST, PORT, assertRequiredEnv } = require('./config');
 const { createApp } = require('./app');
 const { ensureGeneratedProjectsDir } = require('./projectStore');
 
@@ -7,8 +7,8 @@ async function startServer() {
   await ensureGeneratedProjectsDir();
 
   const app = createApp();
-  app.listen(PORT, () => {
-    console.log(`Server listening at http://localhost:${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`Server listening at http://${HOST}:${PORT}`);
   });
 }
 

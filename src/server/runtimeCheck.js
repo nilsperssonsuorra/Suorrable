@@ -76,7 +76,7 @@ async function checkRuntimeErrorsWithJSDOM(projectId, sendEvent) {
 
   return new Promise((resolve, reject) => {
     try {
-      new JSDOM(html, {
+      const dom = new JSDOM(html, {
         runScripts: 'dangerously',
         resources: new LocalDistResourceLoader(projectDistPath),
         url: pathToFileURL(indexPath).href,
@@ -87,6 +87,11 @@ async function checkRuntimeErrorsWithJSDOM(projectId, sendEvent) {
       });
 
       setTimeout(() => {
+        const rootElement = dom.window.document.getElementById('root');
+        if (rootElement && rootElement.children.length === 0 && rootElement.textContent.trim() === '') {
+          warnings.push('Preview root stayed empty in JSDOM. The browser preview may still render if the app depends on browser APIs that JSDOM does not fully emulate.');
+        }
+
         if (errors.length > 0) {
           console.error(`[JSDOM CHECK] Detected errors for project ${projectId}:`, errors);
           const runtimeError = new Error('Runtime errors found in the preview.');
