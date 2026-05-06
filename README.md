@@ -78,7 +78,7 @@ Frontend modules:
 - `deployUi.ts` owns deploy settings, logs, target selection, and draggable deploy status.
 - `projectListUi.ts` renders project history and project actions.
 - `chatUi.ts` owns markdown rendering, messages, build status, and log display.
-- `previewControls.ts` owns preview sandbox enforcement and preview-control contrast hints.
+- `previewControls.ts` owns preview sandbox enforcement.
 
 ## Safety Model
 
@@ -105,6 +105,15 @@ npm run build
 npm start
 ```
 
+On Windows PowerShell, use:
+
+```powershell
+npm install
+Copy-Item .env.example .env
+npm run build
+npm start
+```
+
 Then open:
 
 ```text
@@ -125,12 +134,19 @@ npm start
 
 ## Environment
 
+Required for generation:
+
 ```text
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-3-flash-preview
-VERCEL_TOKEN=your_vercel_token_here
-# Optional: VERCEL_SCOPE=your-team-or-user-slug
 PORT=3000
+```
+
+Optional for Vercel deployment:
+
+```text
+VERCEL_TOKEN=your_vercel_token_here
+VERCEL_SCOPE=your-team-or-user-slug
 ```
 
 ## Vercel Deploy
@@ -193,10 +209,16 @@ npm run build
 
 Current tests cover:
 
+- CORS origin handling and generated preview preflights.
+- Generated child process environment stripping.
+- Peer dependency install fallback detection.
 - Vercel deployment URL extraction.
 - Vercel project name slug generation.
+- Vercel link argument generation.
 - Generated file parsing.
 - Required generated-file validation.
+- Generated package script/dependency normalization.
+- Tailwind/PostCSS config normalization.
 - Planning tag removal.
 - `.vercel` exclusion from AI context.
 - Safe path resolution.
